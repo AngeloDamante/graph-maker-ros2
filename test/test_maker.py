@@ -1,6 +1,6 @@
 import unittest
 from src.ENodeType import NodeType
-from src.graph_maker import create_node, create_topic
+from src.graph_maker import create_node, create_topic, compute_bb
 import cv2
 
 topics = ['/t1', '/t2', 't3', '/t4', 't5']
@@ -13,12 +13,16 @@ incidence_matrix = [[NodeType.PUB, NodeType.NULL, NodeType.SUB, NodeType.NULL, N
 class TestMaker(unittest.TestCase):
 
     def test_create_node(self):
-        img = create_node(nodes[0], [50, 50])
+        img, _, _ = create_node(nodes[0], [50, 50])
         cv2.imwrite("image_node.png", img)
 
     def test_create_topic(self):
-        img = create_topic(topics[0], [50, 50])
+        img, _, _ = create_topic(topics[0], [50, 50])
         cv2.imwrite("image_topic.png", img)
+
+    def test_compute_bb(self):
+        img, tl, br = compute_bb(nodes[0], [50, 50])
+        cv2.imwrite("image_bb.png", img)
 
 
 class TestGraph(unittest.TestCase):
