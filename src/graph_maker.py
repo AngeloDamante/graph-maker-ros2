@@ -10,6 +10,13 @@ BORDER = [10, 10]
 
 
 def create_node(name: str, origin: list, background: np.ndarray = None) -> np.ndarray:
+    """Create Graphic Node for input name.
+
+    :param name:
+    :param origin:
+    :param background:
+    :return image(np.ndarray): image with ellipse
+    """
     if background is None: background = BG_FRAME.copy()
     img = background
 
@@ -27,6 +34,13 @@ def create_node(name: str, origin: list, background: np.ndarray = None) -> np.nd
 
 
 def create_topic(name: str, origin: list, background: np.ndarray = None) -> np.ndarray:
+    """Create graphic topic for input name
+
+    :param name:
+    :param origin:
+    :param background:
+    :return image(np.ndarray): image with rectangle
+    """
     if background is None: background = BG_FRAME.copy()
     img = background
 
