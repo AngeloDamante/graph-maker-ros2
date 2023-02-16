@@ -10,8 +10,8 @@ BORDER = [10, 10]
 
 
 def create_node(name: str, origin: list, background: np.ndarray = None) -> np.ndarray:
-    if background is None: background = BG_FRAME
-    img = background.copy()
+    if background is None: background = BG_FRAME.copy()
+    img = background
 
     # extract dimension
     (lbl_w, lbl_h), _ = cv2.getTextSize(name, fontScale=0.8, fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL, thickness=1)
@@ -27,8 +27,8 @@ def create_node(name: str, origin: list, background: np.ndarray = None) -> np.nd
 
 
 def create_topic(name: str, origin: list, background: np.ndarray = None) -> np.ndarray:
-    if background is None: background = BG_FRAME
-    img = background.copy()
+    if background is None: background = BG_FRAME.copy()
+    img = background
 
     # extract dimension
     (lbl_w, lbl_h), _ = cv2.getTextSize(name, fontScale=0.8, fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL, thickness=1)
