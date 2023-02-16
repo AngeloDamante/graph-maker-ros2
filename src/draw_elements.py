@@ -1,5 +1,5 @@
 """
-    Functions to define ros2 element in the graphic context
+    Functions to draw ros2 element in the image background.
 """
 import cv2
 import numpy as np
@@ -10,7 +10,7 @@ BG_FRAME = np.ones(SIZE, np.uint8) * 245
 BORDER = [10, 10]
 
 
-def create_node(name: str, origin: list, background: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
+def draw_node(name: str, origin: list, background: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
     """Create Graphic Node for input name.
 
     :param name:
@@ -28,7 +28,7 @@ def create_node(name: str, origin: list, background: np.ndarray = None) -> Tuple
     return img, tuple(top_left), tuple(bottom_right)
 
 
-def create_topic(name: str, origin: list, background: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
+def draw_topic(name: str, origin: list, background: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
     """Create graphic Topic for input name
 
     :param name:
