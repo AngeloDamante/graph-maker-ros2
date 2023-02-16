@@ -1,6 +1,7 @@
 import unittest
 from src.ENodeType import NodeType
 from src.graph_maker import create_node, create_topic, compute_bb
+from src.GraphTree import make_graph
 import cv2
 
 topics = ['/t1', '/t2', 't3', '/t4', 't5']
@@ -26,8 +27,11 @@ class TestMaker(unittest.TestCase):
 
 
 class TestGraph(unittest.TestCase):
+
     def test_make_graph(self):
-        pass
+        flag, img = make_graph(nodes, topics, incidence_matrix)
+        cv2.imwrite("graph.png", img)
+        self.assertEqual(flag, True)
 
     def test_make_graph_failure(self):
         pass
