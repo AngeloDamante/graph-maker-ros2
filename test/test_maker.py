@@ -1,6 +1,6 @@
 import unittest
 from src.ENodeType import NodeType
-from src.draw_elements import draw_node, draw_topic, compute_bb, draw_connection
+from src.Drawer import draw_node, draw_topic, compute_bb, draw_connection
 from GraphMaker import make_graph
 import cv2
 

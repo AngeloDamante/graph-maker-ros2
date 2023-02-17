@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.draw_elements import draw_node, draw_topic
+from src.Drawer import draw_node, draw_topic
 from typing import Tuple
 
 SIZE = (720, 1280, 3)
@@ -11,6 +11,13 @@ INIT_TOPICS = (150, 50)
 
 
 class GraphMaker:
+    """GraphMaker
+
+    Attributes:
+        nodes
+        topics
+        incidence_matrix
+    """
     def __init__(self, nodes: list, topics: list, incidence_matrix: list):
         self.nodes = nodes
         self.topics = topics
@@ -44,7 +51,8 @@ class GraphMaker:
     def get_graph(self) -> np.ndarray:
         return self.img
 
-
+    def make_graph(self) -> bool:
+        if not self.is_valid(): return False
 
 
 
