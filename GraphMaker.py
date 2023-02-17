@@ -5,7 +5,6 @@
     @license: GOGO
 """
 import enum
-
 import cv2
 import numpy as np
 from src.Drawer import draw_node, draw_topic
@@ -49,7 +48,10 @@ class GraphMaker:
         # PREconditions
         if len(self.nodes) != len(self.incidence_matrix): return False
         if len(self.topics) != len(self.incidence_matrix[0]): return False
-        if not all(isinstance(x[i], NodeType) for x in self.incidence_matrix for i in range(len(self.incidence_matrix))): return False
+        if not all(isinstance(x[i], NodeType) for x in self.incidence_matrix for i in
+                   range(len(self.incidence_matrix))): return False
+        if not all(isinstance(x, str) for x in self.nodes): return False
+        if not all(isinstance(x, str) for x in self.topics): return False
         return True
 
     def set_nodes(self, nodes: list):
@@ -83,12 +85,12 @@ class GraphMaker:
 
     def make_graph(self) -> bool:
         if not self.is_valid(): return False
-
-
+        # TODO
 
 
 # TEMP
-def make_graph(nodes: list, topics: list, incidence_matrix: list, background: np.ndarray = BG_FRAME) -> Tuple[bool, np.ndarray]:
+def make_graph(nodes: list, topics: list, incidence_matrix: list, background: np.ndarray = BG_FRAME) -> Tuple[
+    bool, np.ndarray]:
     # PREconditions
     if len(nodes) != len(incidence_matrix): return False, np.zeros(background.shape)
     if len(topics) != len(incidence_matrix[0]): return False, np.zeros(background.shape)
