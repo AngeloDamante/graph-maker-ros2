@@ -1,14 +1,18 @@
 import unittest
 from src.ENodeType import NodeType
 from src.Drawer import draw_node, draw_topic, compute_inner_bb, draw_connection
-from GraphMaker import make_graph
+from GraphMaker import GraphMaker
 import cv2
 
-topics = ['/t1', '/t2', 't3', '/t4', 't5']
 nodes = ['/camera/img_sender', '/n2', '/n3']
+topics = ['/t1', '/t2', 't3', '/t4', 't5']
 incidence_matrix = [[NodeType.PUB, NodeType.NULL, NodeType.SUB, NodeType.NULL, NodeType.PUB],
                     [NodeType.NULL, NodeType.PUB, NodeType.SUB, NodeType.NULL, NodeType.SUB],
                     [NodeType.PUB, NodeType.PUB, NodeType.PUB, NodeType.SUB, NodeType.SUB]]
+
+bad_incidence_matrix = [[NodeType.PUB, 0, NodeType.SUB, NodeType.NULL, NodeType.PUB],
+                        [NodeType.NULL, "PUB", NodeType.SUB, NodeType.NULL, NodeType.SUB],
+                        [NodeType.PUB, NodeType.PUB, NodeType.PUB, NodeType.SUB, NodeType.SUB]]
 
 
 class TestGraphicLib(unittest.TestCase):
@@ -22,7 +26,7 @@ class TestGraphicLib(unittest.TestCase):
         cv2.imwrite("image_topic.png", img)
 
     def test_compute_bb(self):
-        img, tl, br = compute_bb(nodes[0], [50, 50])
+        img, tl, br = compute_inner_bb(nodes[0], [50, 50])
         cv2.imwrite("image_bb.png", img)
 
     def test_draw_connection(self):
@@ -37,12 +41,12 @@ class TestGraphicLib(unittest.TestCase):
 class TestMaker(unittest.TestCase):
 
     def test_make_graph(self):
-        flag, img = make_graph(nodes, topics, incidence_matrix)
-        cv2.imwrite("graph.png", img)
-        self.assertEqual(flag, True)
+        o_gm = GraphMaker(nodes, topics, incidence_matrix)
+        self.assertEqual(o_gm.is_valid(), True)
 
     def test_make_graph_failure(self):
-        pass
+        o_gm = GraphMaker(nodes, topics, bad_incidence_matrix)
+        self.assertEqual(o_gm.is_valid(), False)
 
 
 if __name__ == '__main__':
