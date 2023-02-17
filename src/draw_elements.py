@@ -4,6 +4,7 @@
 import cv2
 import numpy as np
 from typing import Tuple
+from src.ENodeType import NodeType
 
 SIZE = (720, 1280, 3)
 BG_FRAME = np.ones(SIZE, np.uint8) * 245
@@ -77,3 +78,22 @@ def draw_topic(name: str, origin: list, background: np.ndarray = None, border=No
     bottom_right = (bottom_right[0] + border[0], bottom_right[1] + border[1])
     img = cv2.rectangle(img, top_left, bottom_right, color=(0, 0, 0), thickness=2)
     return img, tuple(top_left), tuple(bottom_right)
+
+
+def draw_connection(node: tuple, topic: tuple, background:np.ndarray = None, action: NodeType = NodeType.NULL) -> np.ndarray:
+    """Draw connection between node and topic.
+
+    :param node:
+    :param topic:
+    :param background:
+    :param action: desired connection type
+    :return: image with desired connection
+    """
+    if background is None:
+        background = BG_FRAME.copy()
+    if action.value == NodeType.NULL.value:
+        return background
+    if action.value == NodeType.PUB.value:
+        return cv2.arrowedLine(background, node, topic, color=(0,0,0), thickness=1)
+    if action.value == NodeType.SUB.value:
+        return cv2.arrowedLine(background, topic, node, color=(0,0,0), thickness=1)
