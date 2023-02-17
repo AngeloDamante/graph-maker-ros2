@@ -4,9 +4,12 @@
     @manteiner: AngeloDamante
     @license: GOGO
 """
+import enum
+
 import cv2
 import numpy as np
 from src.Drawer import draw_node, draw_topic
+from src.ENodeType import NodeType
 from typing import Tuple
 
 SIZE = (720, 1280, 3)
@@ -46,6 +49,7 @@ class GraphMaker:
         # PREconditions
         if len(self.nodes) != len(self.incidence_matrix): return False
         if len(self.topics) != len(self.incidence_matrix[0]): return False
+        if not all(isinstance(x[i], NodeType) for x in self.incidence_matrix for i in range(len(self.incidence_matrix))): return False
         return True
 
     def set_nodes(self, nodes: list):
@@ -79,6 +83,8 @@ class GraphMaker:
 
     def make_graph(self) -> bool:
         if not self.is_valid(): return False
+
+
 
 
 # TEMP
