@@ -1,3 +1,9 @@
+"""
+    @file: GraphMaker.py
+    @description: Class to make graph with ros2 elements
+    @manteiner: AngeloDamante
+    @license: GOGO
+"""
 import cv2
 import numpy as np
 from src.Drawer import draw_node, draw_topic
@@ -5,19 +11,29 @@ from typing import Tuple
 
 SIZE = (720, 1280, 3)
 BG_FRAME = np.ones(SIZE, np.uint8) * 245
-SPACE = (50, 50)  # space between nodes
+SPACE = (50, 50)  # space between elements
 INIT_NODES = (50, 50)
 INIT_TOPICS = (150, 50)
 
 
 class GraphMaker:
-    """GraphMaker
+    """GraphMaker to read and draw indices matrix
+
+    Example parameters:
+        nodes = [a, b, c]
+        topics = [d, e]
+
+    Incidence Matrix Form:
+            a       b       c
+        d   PUB     NULL    SUB
+        e   SUB     PUB     NULL
 
     Attributes:
         nodes
         topics
         incidence_matrix
     """
+
     def __init__(self, nodes: list, topics: list, incidence_matrix: list):
         self.nodes = nodes
         self.topics = topics
@@ -42,10 +58,20 @@ class GraphMaker:
         self.incidence_matrix = matrix
 
     def set_size(self, size: tuple):
+        """Change size of background. This operation resets the image.
+
+        :param size:
+        :return: None
+        """
         self.size = size
         self.img = np.ones(self.size, np.uint8) * 245
 
     def set_space(self, space: tuple):
+        """Set space between elements.
+
+        :param space:
+        :return:
+        """
         self.space = space
 
     def get_graph(self) -> np.ndarray:
@@ -55,10 +81,8 @@ class GraphMaker:
         if not self.is_valid(): return False
 
 
-
 # TEMP
-def make_graph(nodes: list, topics: list, incidence_matrix: list, background: np.ndarray = BG_FRAME) -> Tuple[
-    bool, np.ndarray]:
+def make_graph(nodes: list, topics: list, incidence_matrix: list, background: np.ndarray = BG_FRAME) -> Tuple[bool, np.ndarray]:
     # PREconditions
     if len(nodes) != len(incidence_matrix): return False, np.zeros(background.shape)
     if len(topics) != len(incidence_matrix[0]): return False, np.zeros(background.shape)
