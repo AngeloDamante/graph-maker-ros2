@@ -16,5 +16,20 @@ class GraphicElement:
     def set_bottom_right(self, br: tuple):
         self.bottom_right = br
 
-    def make_bb_points(self) -> set:
-        raise NotImplementedError()
+    def make_bb_points(self, border: tuple) -> list:
+        points = []
+        tl = (self.top_left[0] - border[0], self.top_left[1] - border[1])
+        br = (self.bottom_right[0] + border[0], self.bottom_right[1] + border[1])
+
+        px, py = tl[0], tl[1]
+        ex, ey = br[0], br[1]
+        while px < ex:
+            points.append((px, py))
+            points.append((px, ey))
+            px += 1
+        px, py = tl[0], tl[1]
+        while py < ey:
+            points.append((px, py))
+            points.append((ex, py))
+            py += 1
+        return points
