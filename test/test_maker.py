@@ -1,6 +1,6 @@
 import unittest
 from src.ENodeType import NodeType
-from src.draw_elements import draw_node, draw_topic, compute_bb
+from src.draw_elements import draw_node, draw_topic, compute_bb, draw_connection
 from GraphMaker import make_graph
 import cv2
 
@@ -24,6 +24,14 @@ class TestGraphicLib(unittest.TestCase):
     def test_compute_bb(self):
         img, tl, br = compute_bb(nodes[0], [50, 50])
         cv2.imwrite("image_bb.png", img)
+
+    def test_draw_connection(self):
+        img = draw_connection((50, 50), (150, 100), action=NodeType.PUB)
+        cv2.imwrite("image_pub.png", img)
+        img = draw_connection((50, 50), (150, 100), action=NodeType.SUB)
+        cv2.imwrite("image_sub.png", img)
+        img = draw_connection((50, 50), (150, 100))
+        cv2.imwrite("image_null.png", img)
 
 
 class TestMaker(unittest.TestCase):
