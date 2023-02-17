@@ -47,6 +47,7 @@ class GraphMaker:
 
 
 
+
 # TEMP
 def make_graph(nodes: list, topics: list, incidence_matrix: list, background: np.ndarray = BG_FRAME) -> Tuple[
     bool, np.ndarray]:
