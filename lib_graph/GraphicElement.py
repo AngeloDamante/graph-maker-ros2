@@ -2,6 +2,13 @@
     Virtual class to define Graphic Element.
 """
 class GraphicElement:
+    """GraphicElelement to handle graphic element and where it placed.
+
+    Attributes:
+        name(str)
+        top_left(tuple)
+        bottom_right(tuple)
+    """
     def __init__(self, name: str, top_left: tuple, bottom_right: tuple):
         self.name = name
         self.top_left = top_left
@@ -17,6 +24,11 @@ class GraphicElement:
         self.bottom_right = br
 
     def make_bb_points(self, border: tuple) -> list:
+        """Make Bounding Box Points.
+
+        :param border:
+        :return: points of bounding box
+        """
         points = []
         tl = (self.top_left[0] - border[0], self.top_left[1] - border[1])
         br = (self.bottom_right[0] + border[0], self.bottom_right[1] + border[1])
