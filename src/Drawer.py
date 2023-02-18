@@ -1,102 +1,98 @@
 """
     @file: Drawer.py
-    @description: Library to draw elements
+    @description: Class to draw elements
     @manteiner: AngeloDamante
     @license: GOGO
 """
-import cv2
 import numpy as np
-from typing import Tuple
-from src.ENodeType import NodeType
 
-SIZE = (720, 1280, 3)
-BG_FRAME = np.ones(SIZE, np.uint8) * 245
-BORDER = [10, 10]
+BG = (248, 255, 250)
+TEXT = (16, 57, 133)
+STEP = (50, 50)
 
 
-def compute_inner_bb(name: str, origin: list, background: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
-    """Compute Bounding Box coords and image with text.
+class Drawer:
+    """Drawer Class
 
-    :param name:
-    :param origin:
-    :param background:
-    :return:
-        image with applied text
-        top_left(tuple)
-        bottom_right(tuple)
+    Attributes:
+        origin: initial point of sheet (x,y)
+        size: sheet dimension (w,h,ch)
+        color_bg: (b,g,r)
+        color_text: (b,g,r)
     """
-    if background is None: background = BG_FRAME.copy()
-    img = background
 
-    # extract dimension
-    (lbl_w, lbl_h), _ = cv2.getTextSize(name, fontScale=0.8, fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL, thickness=1)
+    def __init__(self, origin: tuple, size: tuple, color_bg: tuple = None, color_text: tuple = None) -> None:
+        if color_bg is None: color_bg = BG
+        if color_text is None: color_text = TEXT
 
-    # text
-    ap = [origin[0], origin[1] + lbl_h]
-    img = cv2.putText(img, name, ap, fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL, fontScale=0.8, color=(0, 0, 100))
+        # public
+        self.origin = origin
+        self.size = size
+        self.color_bg = color_bg
+        self.color_text = color_text
 
-    # bb
-    top_left = [origin[0], origin[1]]
-    bottom_right = [origin[0] + lbl_w, origin[1] + lbl_h]
-    return img, tuple(top_left), tuple(bottom_right)
+        # private
+        self._cursor = origin
+        self._step = STEP
+        self._img = np.ndarray(size, dtype=np.uint8) * color_bg
 
+    def is_valid(self) -> bool:
+        # type
+        if not isinstance(self.origin, tuple): return False
+        if not isinstance(self.size, tuple): return False
+        if not isinstance(self.color_bg, tuple): return False
+        if not isinstance(self.color_text, tuple): return False
 
-def draw_node(name: str, origin: list, background: np.ndarray = None, border=None) -> Tuple[np.ndarray, tuple, tuple]:
-    """Create Graphic Node for input name.
+        # dim
+        if len(self.origin) != 2: return False
+        if len(self.size) != 3: return False
+        if len(self.color_bg) != 3: return False
+        if len(self.color_text) != 3: return False
+        return True
 
-    :param name:
-    :param origin:
-    :param background:
-    :param border:
-    :return:
-        image(np.ndarray): image with ellipse
-        top_left(tuple)
-        bottom_right(tuple)
-    """
-    if border is None:
-        border = BORDER
-    img, top_left, bottom_right = compute_inner_bb(name, origin, background)
-    center = [(top_left[0] + bottom_right[0]) // 2, (top_left[1] + bottom_right[1]) // 2]
-    axis_x, axis_y = (bottom_right[0] - top_left[0]) // 2 + border[0], (bottom_right[1] - top_left[1]) // 2 + border[1]
-    img = cv2.ellipse(img, center, (axis_x, axis_y), angle=0, startAngle=0, endAngle=360, color=(0, 0, 0), thickness=1)
-    return img, tuple(top_left), tuple(bottom_right)
+    def reset_drawer(self, origin: tuple, size: tuple, color_bg: tuple) -> None:
+        """Reset drawer with origin, size and color_bg
 
+        :param origin:
+        :param size:
+        :param color_bg:
+        :return:
+        """
+        self.origin = origin
+        self.size = size
+        self.color_bg = color_bg
+        self._cursor = origin
 
-def draw_topic(name: str, origin: list, background: np.ndarray = None, border=None) -> Tuple[np.ndarray, tuple, tuple]:
-    """Create graphic Topic for input name
+    def set_origin(self, origin: tuple) -> None:
+        self.origin = origin
 
-    :param name:
-    :param origin:
-    :param background:
-    :param border:
-    :return:
-        image(np.ndarray): image with rectangle
-        top_left(tuple)
-        bottom_right(tuple)
-    """
-    if border is None:
-        border = BORDER
-    img, top_left, bottom_right = compute_inner_bb(name, origin, background)
-    top_left = (top_left[0] - border[0], top_left[1] - border[1])
-    bottom_right = (bottom_right[0] + border[0], bottom_right[1] + border[1])
-    img = cv2.rectangle(img, top_left, bottom_right, color=(0, 0, 0), thickness=2)
-    return img, tuple(top_left), tuple(bottom_right)
+    def set_size(self, size: tuple) -> None:
+        self.size = size
 
+    def set_color_background(self, color_bg: tuple) -> None:
+        self.color_bg = color_bg
 
-def draw_connection(node: tuple, topic: tuple, background: np.ndarray = None, action: NodeType = NodeType.NULL) -> np.ndarray:
-    """Draw connection between node and topic.
+    def set_color_text(self, color_text: tuple) -> None:
+        """Set desired color for text
 
-    :param node:
-    :param topic:
-    :param background:
-    :param action: desired connection type
-    :return: image with desired connection
-    """
-    if background is None:
-        background = BG_FRAME.copy()
-    if action.value == NodeType.NULL.value:
-        return background
-    if action.value == NodeType.PUB.value:
-        return cv2.arrowedLine(background, node, topic, color=(0, 0, 0), thickness=1)
-    if action.value == NodeType.SUB.value:
-        return cv2.arrowedLine(background, topic, node, color=(0, 0, 0), thickness=1)
+        :param color_text:
+        :return:
+        """
+        self.color_text = color_text
+
+    def set_step(self, step: int) -> None:
+        """Define space between elements (along_x,along_y)
+
+        :param step: tuple
+        :return: None
+        """
+        self._step = step
+
+    def get_step(self) -> tuple:
+        """Get space setted
+
+        :return: tuple for step
+        """
+        return self._step
+
+    # def
