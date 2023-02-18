@@ -7,7 +7,7 @@
 import enum
 import cv2
 import numpy as np
-from src.Drawer import draw_node, draw_topic
+from src.draw_elements import draw_node, draw_topic
 from src.ENodeType import NodeType
 from typing import Tuple
 
@@ -48,10 +48,9 @@ class GraphMaker:
         # PREconditions
         if len(self.nodes) != len(self.incidence_matrix): return False
         if len(self.topics) != len(self.incidence_matrix[0]): return False
-        if not all(isinstance(x[i], NodeType) for x in self.incidence_matrix for i in
-                   range(len(self.incidence_matrix))): return False
         if not all(isinstance(x, str) for x in self.nodes): return False
         if not all(isinstance(x, str) for x in self.topics): return False
+        if not all(isinstance(x[i], NodeType) for x in self.incidence_matrix for i in range(len(self.incidence_matrix))): return False
         return True
 
     def set_nodes(self, nodes: list):
