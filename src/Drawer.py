@@ -50,35 +50,13 @@ class Drawer:
         if len(self.color_text) != 3: return False
         return True
 
-    def reset_drawer(self, origin: tuple, size: tuple, color_bg: tuple) -> None:
+    def reset_drawer(self) -> None:
         """Reset drawer with origin, size and color_bg
 
-        :param origin:
-        :param size:
-        :param color_bg:
-        :return:
+        :return: None
         """
-        self.origin = origin
-        self.size = size
-        self.color_bg = color_bg
-        self._cursor = origin
-
-    def set_origin(self, origin: tuple) -> None:
-        self.origin = origin
-
-    def set_size(self, size: tuple) -> None:
-        self.size = size
-
-    def set_color_background(self, color_bg: tuple) -> None:
-        self.color_bg = color_bg
-
-    def set_color_text(self, color_text: tuple) -> None:
-        """Set desired color for text
-
-        :param color_text:
-        :return:
-        """
-        self.color_text = color_text
+        self._cursor = self.origin
+        self._img = np.ndarray(self.size, dtype=np.uint8) * self.color_bg
 
     def set_step(self, step: int) -> None:
         """Define space between elements (along_x,along_y)
@@ -94,5 +72,3 @@ class Drawer:
         :return: tuple for step
         """
         return self._step
-
-    # def
