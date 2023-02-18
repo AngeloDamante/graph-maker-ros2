@@ -16,7 +16,6 @@ bad_incidence_matrix = [[NodeType.PUB, 0, NodeType.SUB, NodeType.NULL, NodeType.
 
 
 class TestGraphicLib(unittest.TestCase):
-
     def test_create_node(self):
         img, _, _ = draw_node(nodes[0], [50, 50])
         cv2.imwrite("image_node.png", img)
@@ -39,7 +38,6 @@ class TestGraphicLib(unittest.TestCase):
 
 
 class TestMaker(unittest.TestCase):
-
     def test_make_graph(self):
         o_gm = GraphMaker(nodes, topics, incidence_matrix)
         self.assertEqual(o_gm.is_valid(), True)
