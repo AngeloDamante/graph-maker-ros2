@@ -72,3 +72,13 @@ class Drawer:
         :return: tuple for step
         """
         return self._step
+
+    def get_img(self) -> np.ndarray:
+        """Getter method for Image with drawed elements
+
+        :return: image
+        """
+        return self._img
+
+    # def add_node(self, node_name: str) -> bool:
+    #     if not self.is_valid(): return False
