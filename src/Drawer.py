@@ -34,7 +34,8 @@ class Drawer:
         # private
         self._cursor = origin
         self._step = STEP
-        self._img = np.ndarray(size, dtype=np.uint8) * color_bg
+        self._img = np.ndarray(size, dtype=np.uint8)
+        self._img[:, :, :] = self.color_bg
 
     def is_valid(self) -> bool:
         # type
