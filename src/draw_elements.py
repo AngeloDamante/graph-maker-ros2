@@ -16,7 +16,7 @@ IMG_BG[:, :, :] = WHITE
 BORDER = [10, 10]
 
 
-def compute_inner_bb(name: str, origin: list, img_bg: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
+def compute_inner_bb(name: str, origin: tuple, img_bg: np.ndarray = None) -> Tuple[np.ndarray, tuple, tuple]:
     """Compute Bounding Box coords and image with text.
 
     :param name:
@@ -42,7 +42,7 @@ def compute_inner_bb(name: str, origin: list, img_bg: np.ndarray = None) -> Tupl
     return img, tuple(top_left), tuple(bottom_right)
 
 
-def draw_node(name: str, origin: list, img_bg: np.ndarray = None, border=None) -> Tuple[np.ndarray, tuple, tuple]:
+def draw_node(name: str, origin: tuple, img_bg: np.ndarray = None, border=None) -> Tuple[np.ndarray, tuple, tuple]:
     """Create Graphic Node for input name.
 
     :param name:
@@ -62,7 +62,7 @@ def draw_node(name: str, origin: list, img_bg: np.ndarray = None, border=None) -
     return img, tuple(top_left), tuple(bottom_right)
 
 
-def draw_topic(name: str, origin: list, img_bg: np.ndarray = None, border=None) -> Tuple[np.ndarray, tuple, tuple]:
+def draw_topic(name: str, origin: tuple, img_bg: np.ndarray = None, border=None) -> Tuple[np.ndarray, tuple, tuple]:
     """Create graphic Topic for input name
 
     :param name:
