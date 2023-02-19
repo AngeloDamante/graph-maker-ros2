@@ -52,10 +52,6 @@ class Drawer:
         if len(self.color_text) != 3: return False
         return True
 
-    def is_full(self) -> bool:
-        # TODO
-        pass
-
     def reset_drawer(self) -> None:
         """Reset drawer with origin, size and color_bg
 
@@ -94,7 +90,14 @@ class Drawer:
         :return: check flag
         """
         if not self.is_valid(): return False
-        self._img, tl, br = draw_node(node_name, self._cursor, self._img)
+        img_temp, tl, br = draw_node(node_name, self._cursor, self._img.copy())
+        if self._is_full(br): return False
+        if br[0] > self.size[0]:
+            self._cursor = (self.origin[0], br[1] + self._step[1])
+            self._img, tl, br = draw_node(node_name, self._cursor, self._img.copy())
+        else:
+            self._img = img_temp
+        print(f'tl = {tl}, br = {br}')
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
 
@@ -105,24 +108,37 @@ class Drawer:
         :return: check flag
         """
         if not self.is_valid(): return False
+
         self._img, tl, br = draw_topic(topic_name, self._cursor, self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
 
-    def _update_cursor(self, tl: tuple, br: tuple) -> bool:
-        """Update curson in accord to image dimension
+    # def _update_cursor(self, tl: tuple, br: tuple) -> None:
+    #     """Update curson in accord to image dimension
+    #
+    #     There are two cases:
+    #         1. right space is finished => reset x and move cursor to below
+    #         2. right space is not finished => move cursor to the right
+    #
+    #     :param tl: top_left
+    #     :param br: bottom_right
+    #     :return: None
+    #     """
+    #     if br[0] > self.size[0]:
+    #         self._cursor = (self.origin[0], br[1])
+    #         self._img = draw_node(node_name, self._cursor, self._img.copy())
+    #     self._cursor = (br[0] + self._step[0], tl[1])
 
-        There are three cases:
-            1. insert right
-            2. space is finished on the right side
-            3. space is finised for entire image
+    def _is_full(self, bottom_right: tuple) -> bool:
+        """To handle no-space cases
 
-        :param tl: top_left
-        :param br: bottom_right
-        :return: None
+        Two cases:
+            1. vertical space is finished
+            2. horizontal space is finished and vertical space too
+
+        :param bottom_right:
+        :return: flag to verify if there is space for another element
         """
-        # TODO
-        # case 1: if br < size[0]
-        # case 2: if br > size[0]
-        # case 3: if bl > size[1]
-        pass
+        if bottom_right[1] > self.size[1]: return True
+        if bottom_right[0] > self.size[0] and (self._cursor[1] + self._step[1]) > self.size[1]: return True
+        return False
