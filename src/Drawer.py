@@ -5,6 +5,7 @@
     @license: GOGO
 """
 import numpy as np
+from src.draw_elements import draw_node, draw_topic, draw_connection
 
 BG = (248, 255, 250)
 TEXT = (16, 57, 133)
@@ -83,4 +84,13 @@ class Drawer:
         return self._img
 
     def add_node(self, node_name: str) -> bool:
+        """Draw node into image, actual cursor will be updated
+
+        :param node_name:
+        :return: check flag
+        """
         if not self.is_valid(): return False
+        self._img, tl, br = draw_node(node_name, self._cursor, self._img)
+        self._cursor = (br[0] + self._step[0], tl[1])
+        return True
+
