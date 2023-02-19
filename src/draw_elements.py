@@ -27,7 +27,7 @@ def compute_inner_bb(name: str, origin: tuple, img_bg: np.ndarray = None) -> Tup
         top_left(tuple)
         bottom_right(tuple)
     """
-    if img_bg is None: img_bg = IMG_BG
+    if img_bg is None: img_bg = IMG_BG.copy()
 
     # extract dimension
     (lbl_w, lbl_h), _ = cv2.getTextSize(name, fontScale=0.8, fontFace=cv2.FONT_HERSHEY_COMPLEX_SMALL, thickness=1)
