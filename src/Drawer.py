@@ -94,3 +94,13 @@ class Drawer:
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
 
+    def add_topic(self, topic_name: str) -> bool:
+        """Draw topic into image, actual cursor will be updated
+
+        :param topic_name:
+        :return: check flag
+        """
+        if not self.is_valid(): return False
+        self._img, tl, br = draw_topic(topic_name, self._cursor, self._img)
+        self._cursor = (br[0] + self._step[0], tl[1])
+        return True
