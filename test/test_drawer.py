@@ -53,8 +53,9 @@ class TestDrawerClass(unittest.TestCase):
 
     def test_node_topic(self):
         o_drawer = Drawer(origin=(50, 50), size=(640, 720, 3))
-        o_drawer.add_node(NODE)
-        o_drawer.add_topic(TOPIC)
+        flag_node = o_drawer.add_node(NODE)
+        flag_topic = o_drawer.add_topic(TOPIC)
+        self.assertEqual(flag_topic and flag_node, True)
         cv2.imwrite("image.png", o_drawer.get_img())
 
     def test_reset_drawer_failure(self):
