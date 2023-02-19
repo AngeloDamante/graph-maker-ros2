@@ -7,15 +7,15 @@ import cv2
 
 class TestDrawLib(unittest.TestCase):
     def test_create_node(self):
-        img, _, _ = draw_node('/camera/img_sender', [50, 50])
+        img, _, _ = draw_node('/camera/img_sender', (50, 50))
         cv2.imwrite("image_node.png", img)
 
     def test_create_topic(self):
-        img, _, _ = draw_topic('/camera/topic', [50, 50])
+        img, _, _ = draw_topic('/camera/topic', (50, 50))
         cv2.imwrite("image_topic.png", img)
 
     def test_compute_bb(self):
-        img, tl, br = compute_inner_bb('/camera/img_sender', [50, 50])
+        img, tl, br = compute_inner_bb('/camera/img_sender', (50, 50))
         cv2.imwrite("image_bb.png", img)
 
     def test_draw_connection(self):
