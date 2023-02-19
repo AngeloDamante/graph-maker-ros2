@@ -52,6 +52,10 @@ class Drawer:
         if len(self.color_text) != 3: return False
         return True
 
+    def is_full(self) -> bool:
+        # TODO
+        pass
+
     def reset_drawer(self) -> None:
         """Reset drawer with origin, size and color_bg
 
@@ -104,3 +108,21 @@ class Drawer:
         self._img, tl, br = draw_topic(topic_name, self._cursor, self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
+
+    def _update_cursor(self, tl: tuple, br: tuple) -> bool:
+        """Update curson in accord to image dimension
+
+        There are three cases:
+            1. insert right
+            2. space is finished on the right side
+            3. space is finised for entire image
+
+        :param tl: top_left
+        :param br: bottom_right
+        :return: None
+        """
+        # TODO
+        # case 1: if br < size[0]
+        # case 2: if br > size[0]
+        # case 3: if bl > size[1]
+        pass
