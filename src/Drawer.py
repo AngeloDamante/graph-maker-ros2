@@ -32,10 +32,10 @@ class Drawer:
         self.color_text = color_text
 
         # private
-        self._cursor = origin
+        self._cursor = self.origin
         self._step = STEP
-        self._img = np.ndarray(size, dtype=np.uint8)
-        self._img[:, :, :] = self.color_bg
+        self._img = np.ndarray(self.size, dtype=np.uint8)
+        self.reset_drawer()
 
     def is_valid(self) -> bool:
         # type
@@ -56,8 +56,9 @@ class Drawer:
 
         :return: None
         """
+        if not self.is_valid(): return
         self._cursor = self.origin
-        self._img = np.ndarray(self.size, dtype=np.uint8) * self.color_bg
+        self._img[:, :, :] = self.color_bg
 
     def set_step(self, step: int) -> None:
         """Define space between elements (along_x,along_y)
@@ -81,5 +82,5 @@ class Drawer:
         """
         return self._img
 
-    # def add_node(self, node_name: str) -> bool:
-    #     if not self.is_valid(): return False
+    def add_node(self, node_name: str) -> bool:
+        if not self.is_valid(): return False
