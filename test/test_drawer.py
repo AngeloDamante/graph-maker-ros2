@@ -53,14 +53,7 @@ class TestDrawerClass(unittest.TestCase):
 
     def test_draw_node(self):
         o_drawer = Drawer(origin=(50, 50), size=(640, 720, 3))
-        # for i in range(30):
-        #     flag = o_drawer.add_node(NODE)
-        #     if i <= 22: # FIXME (should be 20)
-        #         self.assertEqual(flag, True)
-        #     else:
-        #         self.assertEqual(flag, False)
-
-        for _ in range(21):
+        for _ in range(23):
             flag = o_drawer.add_node(NODE)
             self.assertEqual(flag, True)
         cv2.imwrite("image.png", o_drawer.get_img())
