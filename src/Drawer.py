@@ -35,7 +35,7 @@ class Drawer:
         # private
         self._cursor = self.origin
         self._step = STEP
-        self._img = np.ndarray(self.size, dtype=np.uint8)
+        self._img = np.ndarray((size[1], size[0], size[2]), dtype=np.uint8)
         self.reset_drawer()
 
     def is_valid(self) -> bool:
@@ -91,6 +91,7 @@ class Drawer:
         """
         if not self.is_valid(): return False
         img_temp, tl, br = draw_node(node_name, self._cursor, self._img.copy())
+        # FIXME: missing recheck for is_full
         if self._is_full(br): return False
         if br[0] > self.size[0]:
             self._cursor = (self.origin[0], br[1] + self._step[1])
