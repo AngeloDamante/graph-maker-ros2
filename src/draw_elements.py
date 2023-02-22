@@ -14,7 +14,6 @@ SIZE = (720, 1280, 3)
 WHITE = (254, 254, 254)
 IMG_BG = np.ones(SIZE, np.uint8)
 IMG_BG[:, :, :] = WHITE
-BORDER = [10, 10]
 
 
 def compute_bb(name: str, origin: tuple, border: tuple = (10, 10)) -> Tuple[tuple, tuple]:
@@ -70,7 +69,8 @@ def draw_topic(name: str, origin: tuple, border: tuple = (10, 10), img_bg: np.nd
     return img
 
 
-def draw_connection(node: tuple, topic: tuple, img_bg: np.ndarray = None, action: NodeType = NodeType.NULL) -> np.ndarray:
+def draw_connection(node: tuple, topic: tuple, img_bg: np.ndarray = None,
+                    action: NodeType = NodeType.NULL) -> np.ndarray:
     """Draw connection between node and topic.
 
     :param node:
