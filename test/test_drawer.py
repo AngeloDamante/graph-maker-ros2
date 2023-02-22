@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from src.ENodeType import NodeType
-from src.draw_elements import draw_node, draw_topic, compute_inner_bb, draw_connection
+from src.draw_elements import draw_node, draw_topic, draw_connection, compute_bb
 from src.Drawer import Drawer
 import cv2
 
@@ -13,16 +13,17 @@ TOPIC = '/camera/topic'
 
 class TestDrawLib(unittest.TestCase):
     def test_create_node(self):
-        img, _, _ = draw_node(NODE, (50, 50))
+        img = draw_node(NODE, (50, 50))
         cv2.imwrite("image_node.png", img)
 
     def test_create_topic(self):
-        img, _, _ = draw_topic(TOPIC, (50, 50))
+        img = draw_topic(TOPIC, (50, 50))
         cv2.imwrite("image_topic.png", img)
 
     def test_compute_bb(self):
-        img, tl, br = compute_inner_bb(NODE, (50, 50))
-        cv2.imwrite("image_bb.png", img)
+        tl, br = compute_bb(NODE, (50, 50))
+        self.assertEqual(tl, (40, 40))
+        self.assertEqual(br, (275, 71))
 
     def test_draw_connection(self):
         img = draw_connection((50, 50), (150, 100), action=NodeType.PUB)
@@ -33,8 +34,8 @@ class TestDrawLib(unittest.TestCase):
         cv2.imwrite("image_null.png", img)
 
     def test_draw_node_in_little_image(self):
-        img = np.ones((80,80,3), np.uint8)
-        img, _, _ = draw_node(NODE, (50, 50), img_bg=img)
+        img = np.ones((80, 80, 3), np.uint8)
+        img = draw_node(NODE, (50, 50), img_bg=img)
         cv2.imwrite("little_image.png", img)
 
 
