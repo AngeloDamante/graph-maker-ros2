@@ -69,8 +69,7 @@ def draw_topic(name: str, origin: tuple, border: tuple = (10, 10), img_bg: np.nd
     return img
 
 
-def draw_connection(node: tuple, topic: tuple, img_bg: np.ndarray = None,
-                    action: NodeType = NodeType.NULL) -> np.ndarray:
+def draw_connection(node: tuple, topic: tuple, img_bg: np.ndarray = None, action: NodeType = NodeType.NULL) -> np.ndarray:
     """Draw connection between node and topic.
 
     :param node:
