@@ -5,11 +5,13 @@
     @license: GOGO
 """
 import numpy as np
-from src.draw_elements import draw_node, draw_topic, draw_connection
+from src.draw_elements import draw_node, draw_topic, draw_connection, compute_bb
+from typing import Tuple
 
 BG = (248, 255, 250)
 TEXT = (16, 57, 133)
 STEP = (50, 50)
+BORDER = (10, 10)
 
 
 class Drawer:
@@ -35,7 +37,7 @@ class Drawer:
         # private
         self._cursor = self.origin
         self._step = STEP
-        self._img = np.ndarray((size[1], size[0], size[2]), dtype=np.uint8)
+        self._img = np.ndarray(size, dtype=np.uint8)
         self.reset_drawer()
 
     def is_valid(self) -> bool:
@@ -58,6 +60,7 @@ class Drawer:
         :return: None
         """
         if not self.is_valid(): return
+        self._img = np.ndarray((self.size[1], self.size[0], self.size[2]), dtype=np.uint8)
         self._cursor = self.origin
         self._img[:, :, :] = self.color_bg
 
@@ -90,15 +93,10 @@ class Drawer:
         :return: check flag
         """
         if not self.is_valid(): return False
-        img_temp, tl, br = draw_node(node_name, self._cursor, self._img.copy())
-        # FIXME: missing recheck for is_full
-        if self._is_full(br): return False
-        if br[0] > self.size[0]:
-            self._cursor = (self.origin[0], br[1] + self._step[1])
-            self._img, tl, br = draw_node(node_name, self._cursor, self._img.copy())
-        else:
-            self._img = img_temp
-        print(f'tl = {tl}, br = {br}')
+        b_valid, tl, br = self._evaluate_bb(node_name)
+        if not b_valid: return False
+
+        self._img = draw_node(node_name, self._cursor, img_bg=self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
 
@@ -109,37 +107,27 @@ class Drawer:
         :return: check flag
         """
         if not self.is_valid(): return False
+        b_valid, tl, br = self._evaluate_bb(topic_name)
+        if not b_valid: return False
 
-        self._img, tl, br = draw_topic(topic_name, self._cursor, self._img)
+        self._img= draw_topic(topic_name, self._cursor, img_bg=self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
 
-    # def _update_cursor(self, tl: tuple, br: tuple) -> None:
-    #     """Update curson in accord to image dimension
-    #
-    #     There are two cases:
-    #         1. right space is finished => reset x and move cursor to below
-    #         2. right space is not finished => move cursor to the right
-    #
-    #     :param tl: top_left
-    #     :param br: bottom_right
-    #     :return: None
-    #     """
-    #     if br[0] > self.size[0]:
-    #         self._cursor = (self.origin[0], br[1])
-    #         self._img = draw_node(node_name, self._cursor, self._img.copy())
-    #     self._cursor = (br[0] + self._step[0], tl[1])
+    def _evaluate_bb(self, text: str) -> Tuple[bool, tuple, tuple]:
+        """Evaluate bounding box for selected text
 
-    def _is_full(self, bottom_right: tuple) -> bool:
-        """To handle no-space cases
-
-        Two cases:
-            1. vertical space is finished
-            2. horizontal space is finished and vertical space too
-
-        :param bottom_right:
-        :return: flag to verify if there is space for another element
+        :param text:
+        :return: flag, top_left, bottom_right
         """
-        if bottom_right[1] > self.size[1]: return True
-        if bottom_right[0] > self.size[0] and (self._cursor[1] + self._step[1]) > self.size[1]: return True
-        return False
+        tl, br = compute_bb(text, self._cursor, (0,0))
+        if br[0] > self.size[0]:
+            self._cursor = (self.origin[0], br[1] + self._step[1])
+            tl, br = compute_bb(text, self._cursor, (0,0))
+
+        # vertical space is finished
+        if br[1] > self.size[1]: return False, tl, br
+
+        # horizontal space is finished and vertical space too
+        if br[0] > self.size[0] and (self._cursor[1] + self._step[1]) > self.size[1]: return False, tl, br
+        return True, tl, br
