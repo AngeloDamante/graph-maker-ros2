@@ -110,7 +110,7 @@ class Drawer:
         b_valid, tl, br = self._evaluate_bb(topic_name)
         if not b_valid: return False
 
-        self._img= draw_topic(topic_name, self._cursor, img_bg=self._img)
+        self._img = draw_topic(topic_name, self._cursor, img_bg=self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
         return True
 
@@ -120,10 +120,10 @@ class Drawer:
         :param text:
         :return: flag, top_left, bottom_right
         """
-        tl, br = compute_bb(text, self._cursor, (0,0))
+        tl, br = compute_bb(text, self._cursor, (0, 0))
         if br[0] > self.size[0]:
             self._cursor = (self.origin[0], br[1] + self._step[1])
-            tl, br = compute_bb(text, self._cursor, (0,0))
+            tl, br = compute_bb(text, self._cursor, (0, 0))
 
         # vertical space is finished
         if br[1] > self.size[1]: return False, tl, br
