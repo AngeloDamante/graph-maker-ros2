@@ -7,7 +7,6 @@
 import cv2
 import numpy as np
 from typing import Tuple
-from src.ENodeType import NodeType
 
 # default image
 SIZE = (720, 1280, 3)
@@ -67,22 +66,3 @@ def draw_topic(name: str, origin: tuple, border: tuple = (10, 10), img_bg: np.nd
     top_left, bottom_right = compute_bb(name, origin, border)
     img = cv2.rectangle(img, top_left, bottom_right, color=(0, 0, 0), thickness=2)
     return img
-
-
-def draw_connection(node: tuple, topic: tuple, img_bg: np.ndarray = None, action: NodeType = NodeType.NULL) -> np.ndarray:
-    """Draw connection between node and topic.
-
-    :param node:
-    :param topic:
-    :param img_bg:
-    :param action: desired connection type
-    :return: image with desired connection
-    """
-    if img_bg is None:
-        img_bg = IMG_BG.copy()
-    if action.value == NodeType.NULL.value:
-        return img_bg
-    if action.value == NodeType.PUB.value:
-        return cv2.arrowedLine(img_bg, node, topic, color=(0, 0, 0), thickness=1)
-    if action.value == NodeType.SUB.value:
-        return cv2.arrowedLine(img_bg, topic, node, color=(0, 0, 0), thickness=1)

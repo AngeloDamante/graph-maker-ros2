@@ -5,13 +5,16 @@
     @license: GOGO
 """
 import numpy as np
-from src.draw_elements import draw_node, draw_topic, draw_connection, compute_bb
+import cv2
+from src.draw_elements import draw_node, draw_topic, compute_bb
+from src.ENodeType import NodeType
 from typing import Tuple
 
 BG = (248, 255, 250)
 TEXT = (16, 57, 133)
 STEP = (50, 50)
 BORDER = (10, 10)
+t_failure = False, (-1, -1), (-1, -1)
 
 
 class Drawer:
@@ -39,6 +42,24 @@ class Drawer:
         self._step = STEP
         self._img = np.ndarray(size, dtype=np.uint8)
         self.reset_drawer()
+
+    def _evaluate_bb(self, text: str) -> Tuple[bool, tuple, tuple]:
+        """Evaluate bounding box for selected text
+
+        :param text:
+        :return: flag, top_left, bottom_right
+        """
+        tl, br = compute_bb(text, self._cursor, (0, 0))
+        if br[0] > self.size[0]:
+            self._cursor = (self.origin[0], br[1] + self._step[1])
+            tl, br = compute_bb(text, self._cursor, (0, 0))
+
+        # vertical space is finished
+        if br[1] > self.size[1]: return False, tl, br
+
+        # horizontal space is finished and vertical space too
+        if br[0] > self.size[0] and (self._cursor[1] + self._step[1]) > self.size[1]: return False, tl, br
+        return True, tl, br
 
     def is_valid(self) -> bool:
         # type
@@ -86,48 +107,47 @@ class Drawer:
         """
         return self._img
 
-    def add_node(self, node_name: str) -> bool:
+    def add_node(self, node_name: str) -> Tuple[bool, tuple, tuple]:
         """Draw node into image, actual cursor will be updated
 
         :param node_name:
         :return: check flag
         """
-        if not self.is_valid(): return False
+        if not self.is_valid(): return t_failure
         b_valid, tl, br = self._evaluate_bb(node_name)
-        if not b_valid: return False
+        if not b_valid: return t_failure
 
         self._img = draw_node(node_name, self._cursor, img_bg=self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
-        return True
+        return True, tl, br
 
-    def add_topic(self, topic_name: str) -> bool:
+    def add_topic(self, topic_name: str) -> Tuple[bool, tuple, tuple]:
         """Draw topic into image, actual cursor will be updated
 
         :param topic_name:
         :return: check flag
         """
-        if not self.is_valid(): return False
+        if not self.is_valid(): return t_failure
         b_valid, tl, br = self._evaluate_bb(topic_name)
-        if not b_valid: return False
+        if not b_valid: return t_failure
 
         self._img = draw_topic(topic_name, self._cursor, img_bg=self._img)
         self._cursor = (br[0] + self._step[0], tl[1])
+        return True, tl, br
+
+    def draw_connection(self, p_node: tuple, p_topic: tuple, action: NodeType) -> bool:
+        """Draw connection between two points (node and topic)
+
+        :param p_node:
+        :param p_topic:
+        :param action: PUB or SUB
+        :return:
+        """
+        if not self.is_valid(): return False
+        if action.value == NodeType.PUB.value:
+            self._img = cv2.arrowedLine(self._img, p_node, p_topic, color=(0, 0, 0), thickness=1)
+        if action.value == NodeType.SUB.value:
+            self._img = cv2.arrowedLine(self._img, p_node, p_topic, color=(0, 0, 0), thickness=1)
         return True
 
-    def _evaluate_bb(self, text: str) -> Tuple[bool, tuple, tuple]:
-        """Evaluate bounding box for selected text
 
-        :param text:
-        :return: flag, top_left, bottom_right
-        """
-        tl, br = compute_bb(text, self._cursor, (0, 0))
-        if br[0] > self.size[0]:
-            self._cursor = (self.origin[0], br[1] + self._step[1])
-            tl, br = compute_bb(text, self._cursor, (0, 0))
-
-        # vertical space is finished
-        if br[1] > self.size[1]: return False, tl, br
-
-        # horizontal space is finished and vertical space too
-        if br[0] > self.size[0] and (self._cursor[1] + self._step[1]) > self.size[1]: return False, tl, br
-        return True, tl, br
