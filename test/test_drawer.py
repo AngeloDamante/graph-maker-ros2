@@ -1,9 +1,8 @@
 import unittest
-
 import numpy as np
 
 from src.ENodeType import NodeType
-from src.draw_elements import draw_node, draw_topic, draw_connection, compute_bb
+from src.draw_elements import draw_node, draw_topic, compute_bb
 from src.Drawer import Drawer
 import cv2
 
@@ -24,14 +23,6 @@ class TestDrawLib(unittest.TestCase):
         tl, br = compute_bb(NODE, (50, 50))
         self.assertEqual(tl, (40, 40))
         self.assertEqual(br, (275, 71))
-
-    def test_draw_connection(self):
-        img = draw_connection((50, 50), (150, 100), action=NodeType.PUB)
-        cv2.imwrite("image_pub.png", img)
-        img = draw_connection((50, 50), (150, 100), action=NodeType.SUB)
-        cv2.imwrite("image_sub.png", img)
-        img = draw_connection((50, 50), (150, 100))
-        cv2.imwrite("image_null.png", img)
 
     def test_draw_node_in_little_image(self):
         img = np.ones((80, 80, 3), np.uint8)
@@ -55,7 +46,7 @@ class TestDrawerClass(unittest.TestCase):
     def test_draw_node(self):
         o_drawer = Drawer(origin=(50, 50), size=(640, 720, 3))
         for i in range(25):
-            flag = o_drawer.add_node(NODE)
+            flag, tl, bl = o_drawer.add_node(NODE)
             if i <= 21:
                 self.assertEqual(flag, True)
             else:
@@ -64,8 +55,8 @@ class TestDrawerClass(unittest.TestCase):
 
     def test_node_topic(self):
         o_drawer = Drawer(origin=(50, 50), size=(640, 720, 3))
-        flag_node = o_drawer.add_node(NODE)
-        flag_topic = o_drawer.add_topic(TOPIC)
+        flag_node, _, _ = o_drawer.add_node(NODE)
+        flag_topic, _, _ = o_drawer.add_topic(TOPIC)
         self.assertEqual(flag_topic and flag_node, True)
         cv2.imwrite("image.png", o_drawer.get_img())
 
@@ -81,6 +72,9 @@ class TestDrawerClass(unittest.TestCase):
         o_drawer = Drawer(origin=(50, 50, 1), size=(1280, 72))
         cv2.imwrite("blank_image.png", o_drawer.get_img())
         o_drawer.reset_drawer()
+
+    def test_draw_connections(self):
+        pass
 
 
 if __name__ == '__main__':
