@@ -74,7 +74,10 @@ class TestDrawerClass(unittest.TestCase):
         o_drawer.reset_drawer()
 
     def test_draw_connections(self):
-        pass
+        o_drawer = Drawer(origin=(50, 50), size=(640, 720, 3))
+        o_drawer.draw_connection((50,50), (60,80), NodeType.SUB)
+        o_drawer.draw_connection((90,100), (110,140), NodeType.PUB)
+        cv2.imwrite("conn_image.png", o_drawer.get_img())
 
 
 if __name__ == '__main__':
