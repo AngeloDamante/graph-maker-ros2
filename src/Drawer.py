@@ -147,7 +147,7 @@ class Drawer:
         if action.value == NodeType.PUB.value:
             self._img = cv2.arrowedLine(self._img, p_node, p_topic, color=(0, 0, 0), thickness=1)
         if action.value == NodeType.SUB.value:
-            self._img = cv2.arrowedLine(self._img, p_node, p_topic, color=(0, 0, 0), thickness=1)
+            self._img = cv2.arrowedLine(self._img, p_topic, p_node, color=(0, 0, 0), thickness=1)
         return True
 
 
