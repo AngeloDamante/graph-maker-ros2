@@ -3,12 +3,18 @@ import cv2
 from src.ENodeType import NodeType
 from GraphMaker import GraphMaker
 
+"""
+                '/t1'   '/t2'   '/t3'   '/t4'   '/t5'
+    /camera     PUB     NULL    SUB     NULL    PUB   
+    /n2         NULL    PUB     SUB     NULL    SUB
+    /n3         PUB     PUB     PUB     SUB     SUB
+"""
+
 nodes = ['/camera/img_sender', '/n2', '/n3']
 topics = ['/t1', '/t2', 't3', '/t4', 't5']
 incidence_matrix = [[NodeType.PUB, NodeType.NULL, NodeType.SUB, NodeType.NULL, NodeType.PUB],
                     [NodeType.NULL, NodeType.PUB, NodeType.SUB, NodeType.NULL, NodeType.SUB],
                     [NodeType.PUB, NodeType.PUB, NodeType.PUB, NodeType.SUB, NodeType.SUB]]
-
 bad_incidence_matrix = [[NodeType.PUB, 0, NodeType.SUB, NodeType.NULL, NodeType.PUB],
                         [NodeType.NULL, "PUB", NodeType.SUB, NodeType.NULL, NodeType.SUB],
                         [NodeType.PUB, NodeType.PUB, NodeType.PUB, NodeType.SUB, NodeType.SUB]]
