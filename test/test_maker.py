@@ -24,6 +24,16 @@ class TestMaker(unittest.TestCase):
         o_gm = GraphMaker(nodes, topics, incidence_matrix)
         self.assertEqual(o_gm.is_valid(), True)
 
+    def test_graph_maker_default(self):
+        o_gm = GraphMaker()
+        self.assertEqual(o_gm.is_valid(), False)
+        o_gm.set_nodes(nodes)
+        self.assertEqual(o_gm.is_valid(), False)
+        o_gm.set_topics(topics)
+        self.assertEqual(o_gm.is_valid(), False)
+        o_gm.set_incidence_matrix(incidence_matrix)
+        self.assertEqual(o_gm.is_valid(), True)
+
     def test_graph_maker_failure(self):
         o_gm = GraphMaker(nodes, topics, bad_incidence_matrix)
         self.assertEqual(o_gm.is_valid(), False)
