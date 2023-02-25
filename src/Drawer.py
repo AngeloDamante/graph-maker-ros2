@@ -85,6 +85,17 @@ class Drawer:
         self._cursor = self.origin
         self._img[:, :, :] = self.color_bg
 
+    def set_img(self, img: np.ndarray) -> bool:
+        """Image setter for the custom background
+
+        :param img:
+        :return: chek flag
+        """
+        if not self.is_valid(): return False
+        if self._img.shape != img.shape: return False
+        self._img = img
+        return True
+
     def set_step(self, step: int) -> None:
         """Define space between elements (along_x,along_y)
 
@@ -149,5 +160,3 @@ class Drawer:
         if action.value == NodeType.SUB.value:
             self._img = cv2.arrowedLine(self._img, p_topic, p_node, color=(0, 0, 0), thickness=1)
         return True
-
-
