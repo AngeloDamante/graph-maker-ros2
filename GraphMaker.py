@@ -9,9 +9,9 @@ from src.ENodeType import NodeType
 from src.Drawer import Drawer, BORDER
 from src.utils import compute_bb_points, compute_min_distance_between_points
 
-SIZE = (1280, 720, 3)
+SIZE = (1920, 1280, 3)
 ORIGIN_NODE = (50, 50)
-ORIGIN_TOPIC = (50, 550)
+ORIGIN_TOPIC = (50, 850)
 
 
 class GraphMaker:
@@ -31,11 +31,11 @@ class GraphMaker:
         topics
         incidence_matrix
     """
-
-    def __init__(self, nodes: list, topics: list, incidence_matrix: list):
-        self.nodes = nodes
-        self.topics = topics
-        self.incidence_matrix = incidence_matrix
+    def __init__(self, nodes: list = None, topics: list = None, incidence_matrix: list = None):
+        self.nodes, self.topics, self.incidence_matrix = [], [], [[]]
+        if nodes is not None: self.nodes = nodes
+        if topics is not None: self.topics = topics
+        if incidence_matrix is not None: self.incidence_matrix = incidence_matrix
         self._node_drawer = Drawer(ORIGIN_NODE, SIZE)  # default drawer for nodes
         self._topic_drawer = Drawer(ORIGIN_TOPIC, SIZE)  # default drawer for topics
 
