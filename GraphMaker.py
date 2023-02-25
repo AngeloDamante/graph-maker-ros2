@@ -57,9 +57,8 @@ class GraphMaker:
     def set_incidence_matrix(self, matrix: list) -> None:
         self.incidence_matrix = matrix
 
-    def set_drawer(self, drawer: Drawer) -> bool:
+    def set_drawer(self, drawer: Drawer) -> None:
         self._drawer = drawer
-        return self._drawer.is_valid()
 
     def get_graph(self) -> np.ndarray:
         return self._drawer.get_img()
