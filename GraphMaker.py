@@ -6,8 +6,8 @@
 """
 import numpy as np
 from src.ENodeType import NodeType
-from src.Drawer import Drawer
-from typing import Tuple
+from src.Drawer import Drawer, BORDER
+from src.utils import compute_bb_points, compute_min_distance_between_points
 
 SIZE = (720, 1280, 3)
 ORIGIN = (50, 50)
@@ -35,7 +35,7 @@ class GraphMaker:
         self.nodes = nodes
         self.topics = topics
         self.incidence_matrix = incidence_matrix
-        self._drawer = Drawer(ORIGIN, SIZE)
+        self._drawer = Drawer(ORIGIN, SIZE)  # default drawer
 
     def is_valid(self) -> bool:
         # PREconditions
@@ -65,27 +65,25 @@ class GraphMaker:
 
     def make_graph(self) -> bool:
         if not self.is_valid(): return False
-        # TODO
+        if not self._drawer.is_valid(): return False
 
-# # TEMP
-# def make_graph(nodes: list, topics: list, incidence_matrix: list, background: np.ndarray = BG_FRAME) -> Tuple[
-#     bool, np.ndarray]:
-#     # PREconditions
-#     if len(nodes) != len(incidence_matrix): return False, np.zeros(background.shape)
-#     if len(topics) != len(incidence_matrix[0]): return False, np.zeros(background.shape)
-#
-#     # create nodes
-#     origin_node = list(INIT_NODES)
-#     num_line = 1
-#     img = BG_FRAME.copy()
-#     for node in nodes:
-#         img, tl, br = draw_node(node, origin_node, background=img)
-#         origin_node = [br[0] + SPACE[0], tl[1]]
-#
-#         if origin_node[0] > SIZE[0]:
-#             num_line += 1
-#             origin_node = [INIT_NODES[0], INIT_NODES[1] * num_line]
-#
-#     # create topics TODO
-#
-#     return True, img
+        drawed_nodes = []
+        for node in self.nodes:
+            b_flag, tl, br = self._drawer.add_node(node)
+            if b_flag: drawed_nodes.append({'name': node, 'tl': tl, 'br': br})
+
+        drawed_topics = []
+        for topic in self.topics:
+            b_flag, tl, br = self._drawer.add_topic(topic)
+            if b_flag: drawed_topics.append({'name': topic, 'tl': tl, 'br': br})
+
+        for n in range(len(self.nodes)):
+            for t in range(len(self.topics)):
+                if self.incidence_matrix[n][t].value != NodeType.NULL.value:
+                    _node = [item for item in drawed_nodes if item['name'] == self.nodes[n]][0]
+                    _topic = [item for item in drawed_topics if item['name'] == self.topics[t]][0]
+                    _bb_node = compute_bb_points(_node['tl'], _node['br'], BORDER)
+                    _bb_topic = compute_bb_points(_topic['tl'], _topic['br'], BORDER)
+                    _min_n, _min_t = compute_min_distance_between_points(_bb_node, _bb_topic)
+                    self._drawer.draw_connection(_min_n, _min_t, self.incidence_matrix[n][t])
+        return True
