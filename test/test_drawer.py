@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
+import cv2
 
 from src.ENodeType import NodeType
 from src.draw_elements import draw_node, draw_topic, compute_bb
 from src.Drawer import Drawer
-import cv2
 
 NODE = '/camera/img_sender'
 TOPIC = '/camera/topic'
