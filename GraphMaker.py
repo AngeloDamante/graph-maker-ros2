@@ -64,6 +64,10 @@ class GraphMaker:
         return self._drawer.get_img()
 
     def make_graph(self) -> bool:
+        """Make Graph from incidence_matrix
+
+        :return: check flag
+        """
         if not self.is_valid(): return False
         if not self._drawer.is_valid(): return False
 
