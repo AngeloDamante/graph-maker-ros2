@@ -10,7 +10,8 @@ from src.Drawer import Drawer, BORDER
 from src.utils import compute_bb_points, compute_min_distance_between_points
 
 SIZE = (720, 1280, 3)
-ORIGIN = (50, 50)
+ORIGIN_NODE = (50, 50)
+ORIGIN_TOPIC = (50, 550)
 
 
 class GraphMaker:
@@ -35,7 +36,8 @@ class GraphMaker:
         self.nodes = nodes
         self.topics = topics
         self.incidence_matrix = incidence_matrix
-        self._drawer = Drawer(ORIGIN, SIZE)  # default drawer
+        self._node_drawer = Drawer(ORIGIN_NODE, SIZE)  # default drawer for nodes
+        self._topic_drawer = Drawer(ORIGIN_TOPIC, SIZE)  # default drawer for topics
 
     def is_valid(self) -> bool:
         # PREconditions
@@ -57,11 +59,8 @@ class GraphMaker:
     def set_incidence_matrix(self, matrix: list) -> None:
         self.incidence_matrix = matrix
 
-    def set_drawer(self, drawer: Drawer) -> None:
-        self._drawer = drawer
-
     def get_graph(self) -> np.ndarray:
-        return self._drawer.get_img()
+        return self._node_drawer.get_img()
 
     def make_graph(self) -> bool:
         """Make Graph from incidence_matrix
@@ -69,18 +68,23 @@ class GraphMaker:
         :return: check flag
         """
         if not self.is_valid(): return False
-        if not self._drawer.is_valid(): return False
+        if not self._node_drawer.is_valid(): return False
+        if not self._topic_drawer.is_valid(): return False
 
-        drawed_nodes = []
-        for node in self.nodes:
-            b_flag, tl, br = self._drawer.add_node(node)
-            if b_flag: drawed_nodes.append({'name': node, 'tl': tl, 'br': br})
-
+        # draw topics with topic drawer
         drawed_topics = []
         for topic in self.topics:
-            b_flag, tl, br = self._drawer.add_topic(topic)
+            b_flag, tl, br = self._topic_drawer.add_topic(topic)
             if b_flag: drawed_topics.append({'name': topic, 'tl': tl, 'br': br})
 
+        # draw nodes with node drawer
+        self._node_drawer.set_img(self._topic_drawer.get_img())
+        drawed_nodes = []
+        for node in self.nodes:
+            b_flag, tl, br = self._node_drawer.add_node(node)
+            if b_flag: drawed_nodes.append({'name': node, 'tl': tl, 'br': br})
+
+        # draw connections with node drawer
         for n in range(len(self.nodes)):
             for t in range(len(self.topics)):
                 if self.incidence_matrix[n][t].value != NodeType.NULL.value:
@@ -89,5 +93,5 @@ class GraphMaker:
                     _bb_node = compute_bb_points(_node['tl'], _node['br'], BORDER)
                     _bb_topic = compute_bb_points(_topic['tl'], _topic['br'], BORDER)
                     _min_n, _min_t = compute_min_distance_between_points(_bb_node, _bb_topic)
-                    self._drawer.draw_connection(_min_n, _min_t, self.incidence_matrix[n][t])
+                    self._node_drawer.draw_connection(_min_n, _min_t, self.incidence_matrix[n][t])
         return True
