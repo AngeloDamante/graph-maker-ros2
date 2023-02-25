@@ -9,7 +9,7 @@ from src.ENodeType import NodeType
 from src.Drawer import Drawer, BORDER
 from src.utils import compute_bb_points, compute_min_distance_between_points
 
-SIZE = (720, 1280, 3)
+SIZE = (1280, 720, 3)
 ORIGIN_NODE = (50, 50)
 ORIGIN_TOPIC = (50, 550)
 
