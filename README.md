@@ -1,6 +1,6 @@
 # graph-maker-ros2
 Graph maker for ros2 elements (Nodes and Topics). This project is very simple, it's a library that transforms indices matrix to graphic visualization.
-This library produces an rqt-like graph, so _why use it_? It has been very useful for me when rqt is not available in raspberry environments without gui (like ubuntu-core).
+This library produces a rqt-like graph, so _why use it_? It has been very useful for me when rqt is not available in raspberry environments without gui (like ubuntu-core).
 
 You can use a node to pull out the graph produced by the maker and view it on the Web, through a socket, with `rosboard`.
 ![image](repo_resources/rqt_graph.jpg)
@@ -9,6 +9,7 @@ You can use a node to pull out the graph produced by the maker and view it on th
 ```
 ├── GraphMaker.py
 ├── requirements.txt
+├── node_example.py
 ├── README.md
 ├── repo_resources
 │   └── rqt_graph.jpg
@@ -30,9 +31,16 @@ cd graph-maker-ros2
 pip3 install -r requirements.txt
 ```
 
+## Use in ROS2
+In the `src` file of ros2 workspace. Create a pkg named _graph_maker_ with this library.
+```
+git clone https://github.com/AngeloDamante/graph-maker-ros2.git
+chmod +x graph-maker-ros2/create_pkg.sh
+./graph-maker-ros2/create_pkg.sh
+```
+
 ## Usage
 Generally a custom node creates the incidence matrix by looking at the active nodes and topics with rclcpy. You can find an example of this node in `node_example.py`.
-
 
 ### Input: Indices Matrix
 ```
